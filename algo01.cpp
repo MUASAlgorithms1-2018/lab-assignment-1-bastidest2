@@ -2,6 +2,7 @@
 #include <vector>
 #include <list>
 #include <cassert>
+#include <functional>
 
 int cubic_mss(const std::vector<int>& elements) {
     int currentMax = 0;
@@ -54,15 +55,27 @@ int main() {
         {{1, 2, -30, 4, 99}, 103},
         {{5, 5, -30, 4, 5}, 10},
         {{1, 2, 30, 4, 5}, 42},
-        {{1, 2, -1, 4, 5}, 11}
+        {{1, 2, -1, 4, 5}, 11},
+        #include "./test_cases.raw"
     };
 
-    for(const auto& input : inputs) {
-        std::cout << "Test" << ": expect " << input.second << "...";
-        assert(cubic_mss(input.first) == input.second);
-        assert(quadratic_mss(input.first) == input.second);
-        assert(linear_mss(input.first) == input.second);
-        std::cout << "OK" << std::endl;
-    } 
+    static const std::list<std::pair<std::string, std::function<int(const std::vector<int>&)>>> functions {
+        {"Cubic", cubic_mss},
+        {"Quadratic", quadratic_mss},
+        {"Linear", linear_mss},
+    };
+
+    for(const auto& function : functions) {
+        std::cout << "--- Testing function " << function.first << " ---" << std::endl;
+        for(const auto& input : inputs) {
+            std::cout << "Test" << ": expect " << input.second << "...";
+            const int res = function.second(input.first);
+            if(res == input.second) {
+                std::cout << "\tOK" << std::endl;
+            } else {
+                std::cout << "\tERROR: got " << res << std::endl;
+            }
+        } 
+    }
     return 0;
 }
