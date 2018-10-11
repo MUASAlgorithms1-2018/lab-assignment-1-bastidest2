@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <map>
+#include <list>
 #include <cassert>
 
 int cubic_mss(const std::vector<int>& elements) {
@@ -48,15 +48,16 @@ int linear_mss(const std::vector<int>& elements) {
 }
 
 int main() {
-    static const std::map<std::vector<int>, int> inputs {
+    static const std::list<std::pair<std::vector<int>, int>> inputs {
         {{1, 2, -30, 4, 5}, 9},
         {{1, 2, -35, 4, 5}, 9},
         {{1, 2, -30, 4, 99}, 103},
         {{5, 5, -30, 4, 5}, 10},
-        {{1, 2, 30, 4, 5}, 42}
+        {{1, 2, 30, 4, 5}, 42},
+        {{1, 2, -1, 4, 5}, 11}
     };
 
-    for(const std::pair<std::vector<int>, int>& input : inputs) {
+    for(const auto& input : inputs) {
         std::cout << "Test" << ": expect " << input.second << "...";
         assert(cubic_mss(input.first) == input.second);
         assert(quadratic_mss(input.first) == input.second);
